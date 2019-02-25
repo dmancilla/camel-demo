@@ -10,5 +10,4 @@ public class CamelDemoApplication {
         System.setProperty("hawtio.authenticationEnabled", "false");
         SpringApplication.run(CamelDemoApplication.class, args);
     }
-
 }

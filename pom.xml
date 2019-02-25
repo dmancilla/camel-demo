@@ -50,19 +50,19 @@
 
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-stream</artifactId>
+            <artifactId>camel-swagger-java-starter</artifactId>
             <version>${camel-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-servlet</artifactId>
+            <artifactId>camel-jackson-starter</artifactId>
             <version>${camel-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-undertow-starter</artifactId>
+            <artifactId>camel-servlet-starter</artifactId>
             <version>${camel-version}</version>
         </dependency>
 
@@ -73,6 +73,14 @@
             <version>2.5.0</version>
         </dependency>
 
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test-spring</artifactId>
+            <version>${camel-version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -108,6 +116,16 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.7</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
             </plugin>
 
         </plugins>
