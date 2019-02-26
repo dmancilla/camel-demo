@@ -8,26 +8,43 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class UsuarioRouteTest extends CamelTestSupport {
-    private final String ORIGEN_URI = "direct:in";
+    private final String ORIGEN_CREACION_URI = "direct:usuarioCreacion";
+    private final String ORIGEN_ACTUALIZACION_URI = "direct:usuarioActualizacion";
 
-    @Produce(uri = ORIGEN_URI)
-    private ProducerTemplate directIn;
+    @Produce(uri = ORIGEN_CREACION_URI)
+    private ProducerTemplate producerCreacion;
+
+    @Produce(uri = ORIGEN_ACTUALIZACION_URI)
+    private ProducerTemplate producerActualizacion;
 
     @Override
     protected RoutesBuilder createRouteBuilder() {
-        return new UsuarioRoute(ORIGEN_URI);
+        return new UsuarioRoute(ORIGEN_CREACION_URI, ORIGEN_ACTUALIZACION_URI);
     }
 
     @Test
-    public void simpleTestUsuario() {
+    public void simpleCreacionUsuario() {
         //Arrange
         UsuarioRequest u = new UsuarioRequest("david.mancilla@axity.com", "David Mancilla");
 
         //Act
-        UsuarioRespuesta respuesta = directIn.requestBody(u, UsuarioRespuesta.class);
+        UsuarioRespuesta respuesta = producerCreacion.requestBody(u, UsuarioRespuesta.class);
 
         //Assert
         Assert.assertEquals("Usuario david.mancilla@axity.com agregado correctamente", respuesta.getMensaje());
+    }
+
+
+    @Test
+    public void simpleActualizacionUsuario() {
+        //Arrange
+        UsuarioRequest u = new UsuarioRequest("david.mancilla@axity.com", "David Mancilla");
+
+        //Act
+        UsuarioRespuesta respuesta = producerActualizacion.requestBody(u, UsuarioRespuesta.class);
+
+        //Assert
+        Assert.assertEquals("Usuario david.mancilla@axity.com actualizado correctamente", respuesta.getMensaje());
     }
 
 }

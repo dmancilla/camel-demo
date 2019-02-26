@@ -9,37 +9,53 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsuarioRoute extends RouteBuilder {
 
-    private final String rutaInicio;
+    private final String rutaCreacion;
+    private final String rutaActualizacion;
 
     public UsuarioRoute() {
-        this.rutaInicio = "direct:usuarioPost";
+        this.rutaCreacion = "direct:usuarioCreacion";
+        this.rutaActualizacion = "direct:usuarioActualizacion";
     }
 
-    public UsuarioRoute(String rutaInicio) {
-        this.rutaInicio = rutaInicio;
+    public UsuarioRoute(String rutaCreacion, String rutaActualizacion) {
+        this.rutaCreacion = rutaCreacion;
+        this.rutaActualizacion = rutaActualizacion;
     }
 
     @Override
     public void configure() {
         inicializarRest();
 
-        //Ruta de entrada de usuario
-        rest("/usuarios").description("Servicio REST de usuarios")
-            .post("/").description("Crear un usuario").type(UsuarioRequest.class)
+        //Ruta de entrada de creacion de usuario
+        rest("/usuarios").description("Servicio REST de creacion de usuarios")
+            .post("/").description("Crea un usuario").type(UsuarioRequest.class)
             .param().name("body").type(RestParamType.body).description("El usuario a crear").endParam()
-            .responseMessage().code(HttpStatus.OK.value()).message("Usuario recibido").endResponseMessage()
-            .to(rutaInicio);
+            .responseMessage().code(HttpStatus.OK.value()).message("Usuario creado").endResponseMessage()
+            .to(rutaCreacion);
 
-        //Ruta de proceso de usuario
-        from(rutaInicio).id("direct-usuarioPost")
-            .log("body: ${body}")
-            .convertBodyTo(UsuarioRequest.class)
-            .log("body: ${body}")
+        //Ruta de entrada de actualizacion de usuario
+        rest("/usuarios").description("Servicio REST de actualizacion de usuarios")
+            .put("/").description("Actualizar un usuario").type(UsuarioRequest.class)
+            .param().name("body").type(RestParamType.body).description("El usuario a actualizar").endParam()
+            .responseMessage().code(HttpStatus.OK.value()).message("Usuario actualizado").endResponseMessage()
+            .to(rutaActualizacion);
 
+        //Ruta de creacion de usuario
+        from(rutaCreacion).id("route-usuarioCreacion")
             .process(exchange -> {
                 UsuarioRequest body = exchange.getIn().getBody(UsuarioRequest.class);
                 //TODO: Procesar el usuario
                 UsuarioRespuesta respuesta = new UsuarioRespuesta("Usuario " + body.getEmail() + " agregado correctamente");
+                exchange.getIn().setBody(respuesta);
+            })
+        ;
+
+        //Ruta de creacion de usuario
+        from(rutaActualizacion).id("route-usuarioActualizacion")
+            .process(exchange -> {
+                UsuarioRequest body = exchange.getIn().getBody(UsuarioRequest.class);
+                //TODO: Actualizar el usuario
+                UsuarioRespuesta respuesta = new UsuarioRespuesta("Usuario " + body.getEmail() + " actualizado correctamente");
                 exchange.getIn().setBody(respuesta);
             })
         ;
@@ -55,5 +71,6 @@ public class UsuarioRoute extends RouteBuilder {
             .apiContextPath("/api-doc")
             .apiProperty("api.title", "API de Usuario")
             .apiProperty("api.version", "1.0");
+
     }
 }
